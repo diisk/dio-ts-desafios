@@ -1,9 +1,9 @@
 // O código abaixo tem alguns erros e não funciona como deveria. Você pode identificar quais são e corrigi-los em um arquivo TS?
 
-let botaoAtualizar:HTMLButtonElement = document.getElementById('atualizar-saldo') as HTMLButtonElement;
-let botaoLimpar:HTMLButtonElement = document.getElementById('limpar-saldo') as HTMLButtonElement;
-let soma:HTMLInputElement = document.getElementById('soma') as HTMLInputElement;
-let campoSaldo:HTMLSpanElement = document.getElementById('campo-saldo') as HTMLSpanElement;
+let botaoAtualizar = document.getElementById('atualizar-saldo') as HTMLButtonElement;
+let botaoLimpar = document.getElementById('limpar-saldo') as HTMLButtonElement;
+let soma = document.getElementById('soma') as HTMLInputElement;
+let campoSaldo = document.getElementById('campo-saldo') as HTMLSpanElement;
 
 campoSaldo.innerHTML = '0';
 
