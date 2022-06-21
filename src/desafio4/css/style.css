@@ -7,9 +7,13 @@ body{
     height: 100%;
     position: absolute;
     z-index: 0;
-    background-color: orangered;
+    background-color: #222222;
     left: 0;
     top: 0;
+}
+
+.esconder{
+    display: none!important;
 }
 
 .container{
@@ -21,31 +25,40 @@ body{
     top: 0;
 }
 
-.loginContainer{
+#loginContainer{
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
 }
 
+#loginContainer>img{
+    margin: 30px auto;
+    width: 80%;
+    border-radius: 10px;
+    background-color: #FFFFFF80;
+    padding: 10px;
+}
+
 .loginInfo{
-    height: 30%;
+    height: 20%;
     display: flex;
-    margin: auto;
 }
 
 .loginInfo>div{
     text-align: justify;
-    background-color: beige;
-    margin: auto 20px;
-    padding: 40px 10px 40px 10px;
+    background-color: #ff5214da;
+    padding: 20px 10px 20px 10px;
     border: 2px solid black;
-    font-size: 20px;
+    margin: auto;
+    font-size: 0.8rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    border-radius: 20px;
 }
 
 .loginCampos{
     height: 60%;
-    background-color: black;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -55,33 +68,48 @@ body{
 .loginCampos>input{
     background-color: transparent;
     border-radius: 10px;
-    border: 2px solid orangered;
+    border: 2px solid #ff5214da;
     height: 40px;
     width: 80%;
     font-size: 18px;
     margin-bottom: 20px;
     color: white;
+    outline: none;
 }
 
 .loginCampos>button{
-    background-color: transparent;
     border-radius: 10px;
-    border: 2px solid orangered;
+    border: none;
     height: 40px;
     width: 60%;
     font-size: 20px;
     font-weight: 600;
-    background-color: orangered;
+    background-color: #ff5214da;
+    margin-bottom: 40px;
+    color: #222222;
+}
+
+.loginCampos>button:disabled{
+    background-color: transparent;
+    border: 2px solid gray;
+    color: gray;
+}
+
+.loginCampos>span{
+    color: white;
+    width: 100%;
+    height: 80px;
+    text-align: center;
 }
 
 .loginCampos>input::placeholder{
     color: white;
 }
 
-.mainContainer{
+#mainContainer{
     width: 100%;
     height: 100%;
-    display: none;
+    display: flex;
     flex-direction: column;
 }
 
@@ -94,14 +122,17 @@ body{
 }
 
 .headerButton{
-    background-color: black;
     color: white;
     border: 0;
     width: 100%;
+    background-color: transparent;
+    
+    padding: 0px 10px;
 }
 
-.headerButton:hover{
-    color: gray;
+.selectedHeader{
+    color: #ff5214da;
+    border-bottom: 2px solid #ff5214da;
 }
 
 .headerButton>i{
@@ -113,7 +144,6 @@ body{
     width: 100%;
     height: 100%;
     opacity: 0.8;
-    background-color: black;
     display: flex;
     flex-direction: column;
 }
@@ -165,8 +195,9 @@ body{
 .footerContent{
     z-index: 1;
     width: 100%;
-    height: 8%;
+    height: 40px;
     position: absolute;
     top: 92%;
     left: 0;
+    background-color: #ff5214da;
 }

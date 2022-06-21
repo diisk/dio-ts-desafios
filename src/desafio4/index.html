@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>TMDB - Lista de Filmes</title>
     <link href="fontawesome/css/all.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
     <div class="background"></div>
     <div class="container">
-        <div class="loginContainer">
+        <div id="loginContainer" class="esconder">
+            <img src="svg/logotmdb.svg" alt="logo"/>
             <div class="loginInfo">
                 <div>
                     Para continuar é necessário possuir um cadastro no themoviedb, caso já possua preencha o usuário e senha, e clique em continuar.
@@ -19,14 +20,15 @@
                 </div>
             </div>
             <div class="loginCampos">
-                <input id="login" type="text" placeholder="Usuário" onkeyup="preencherLogin(event)">
-                <input id="senha" type="password" placeholder="Senha" type="password" onkeyup="preencherSenha(event)">
+                <input id="login" type="text" autocomplete="off" placeholder="Usuário" onkeyup="preencherLogin(event)">
+                <input id="senha" type="password" autocomplete="off" placeholder="Senha" type="password" onkeyup="preencherSenha(event)">
                 <button id="login-button" type="button" disabled>Continuar</button>
+                <span id="erroMsg"></span>
             </div>
         </div>
-        <div class="mainContainer">
+        <div id="mainContainer" class="">
             <header class="headerContent">
-                <button type="button" id="btnBuscar" class="headerButton"><i class="fas fa-search"></i><br>Buscar</button>
+                <button type="button" id="btnBuscar" class="headerButton selectedHeader"><i class="fas fa-search"></i><br>Buscar</button>
                 <button type="button" id="btnMinhasListas" class="headerButton"><i class="fas fa-book"></i><br>Minhas listas</button>
             </header>
             <main class="bodyContent">

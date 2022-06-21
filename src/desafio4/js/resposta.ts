@@ -1,4 +1,4 @@
-var apiKey = '3f301be7381a03ad8d352314dcc3ec1d';
+const apiKey = '3f301be7381a03ad8d352314dcc3ec1d';
 let requestToken: string;
 let username: string;
 let password: string;
@@ -9,11 +9,26 @@ let loginButton = document.getElementById('login-button') as HTMLButtonElement;
 let searchButton = document.getElementById('search-button') as HTMLButtonElement;
 let searchContainer = document.getElementById('search-container') as HTMLDivElement;
 
+var loginTimeOut:number;
 loginButton.addEventListener('click', async () => {
     await criarRequestToken();
-    await logar();
-    await criarSessao();
-    console.log("TEST");
+    const result:any = await logar();
+    if(result && result.success){
+        await criarSessao();
+        (document.getElementById("loginContainer") as HTMLDivElement).classList.add("esconder");
+        (document.getElementById("mainContainer") as HTMLDivElement).classList.remove("esconder");
+        return;
+    }
+    if(loginButton){
+        clearTimeout(loginTimeOut);
+    }
+    
+    const erroSpan = document.getElementById("erroMsg") as HTMLSpanElement;
+    erroSpan.innerText = "Usuário ou senha inválidos!";
+    loginTimeOut = setTimeout(()=>{
+        erroSpan.innerText = '';
+        clearTimeout();
+    },5000);
 })
 
 searchButton.addEventListener('click', async () => {
@@ -63,7 +78,8 @@ class HttpClient {
                 if (request.status >= 200 && request.status < 300) {
                     resolve(JSON.parse(request.responseText));
                 } else {
-                    reject({
+                    console.log(request.status);
+                    resolve({
                         status: request.status,
                         statusText: request.statusText
                     })
@@ -76,11 +92,13 @@ class HttpClient {
                 })
             }
 
+            console.log(body);
             if (body) {
                 request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 body = JSON.stringify(body);
             }
             request.send(body);
+            
         })
     }
 }
@@ -112,15 +130,19 @@ async function criarRequestToken() {
 }
 
 async function logar() {
-    await HttpClient.get({
-        url: `https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=${apiKey}`,
-        method: "POST",
-        body: {
-            username: `${username}`,
-            password: `${password}`,
-            request_token: `${requestToken}`
-        }
-    })
+    let ret:any;
+    try{
+        ret = await HttpClient.get({
+            url: `https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=${apiKey}`,
+            method: "POST",
+            body: {
+                username: `${username}`,
+                password: `${password}`,
+                request_token: `${requestToken}`
+            }
+        });
+    }catch{};
+    return ret;
 }
 
 async function criarSessao() {

@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var apiKey = '3f301be7381a03ad8d352314dcc3ec1d';
+const apiKey = '3f301be7381a03ad8d352314dcc3ec1d';
 let requestToken;
 let username;
 let password;
@@ -17,11 +17,25 @@ let listId = '8207594';
 let loginButton = document.getElementById('login-button');
 let searchButton = document.getElementById('search-button');
 let searchContainer = document.getElementById('search-container');
+var loginTimeOut;
 loginButton.addEventListener('click', () => __awaiter(void 0, void 0, void 0, function* () {
     yield criarRequestToken();
-    yield logar();
-    yield criarSessao();
-    console.log("TEST");
+    const result = yield logar();
+    if (result && result.success) {
+        yield criarSessao();
+        document.getElementById("loginContainer").classList.add("esconder");
+        document.getElementById("mainContainer").classList.remove("esconder");
+        return;
+    }
+    if (loginButton) {
+        clearTimeout(loginTimeOut);
+    }
+    const erroSpan = document.getElementById("erroMsg");
+    erroSpan.innerText = "Usuário ou senha inválidos!";
+    loginTimeOut = setTimeout(() => {
+        erroSpan.innerText = '';
+        clearTimeout();
+    }, 5000);
 }));
 searchButton.addEventListener('click', () => __awaiter(void 0, void 0, void 0, function* () {
     /*let lista = document.getElementById("lista");
@@ -68,7 +82,8 @@ class HttpClient {
                         resolve(JSON.parse(request.responseText));
                     }
                     else {
-                        reject({
+                        console.log(request.status);
+                        resolve({
                             status: request.status,
                             statusText: request.statusText
                         });
@@ -80,6 +95,7 @@ class HttpClient {
                         statusText: request.statusText
                     });
                 };
+                console.log(body);
                 if (body) {
                     request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                     body = JSON.stringify(body);
@@ -120,15 +136,21 @@ function criarRequestToken() {
 }
 function logar() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield HttpClient.get({
-            url: `https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=${apiKey}`,
-            method: "POST",
-            body: {
-                username: `${username}`,
-                password: `${password}`,
-                request_token: `${requestToken}`
-            }
-        });
+        let ret;
+        try {
+            ret = yield HttpClient.get({
+                url: `https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=${apiKey}`,
+                method: "POST",
+                body: {
+                    username: `${username}`,
+                    password: `${password}`,
+                    request_token: `${requestToken}`
+                }
+            });
+        }
+        catch (_a) { }
+        ;
+        return ret;
     });
 }
 function criarSessao() {
