@@ -1,5 +1,7 @@
 body{
-    height: 97vh;
+    box-sizing: border-box;
+    margin: 0;
+    width: 100%;
 }
 
 .background{
@@ -10,19 +12,74 @@ body{
     background-color: #222222;
     left: 0;
     top: 0;
+    right: 0;
+}
+
+.backgroundOpacity{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1;
+    background-color: #00000033;
+    left: 0;
+    top: 0;
+    right: 0;
+    display: none;
+}
+
+#blockScreen{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 3;
+    background-color: #00000099;
+    left: 0;
+    top: 0;
+    right: 0;
 }
 
 .esconder{
     display: none!important;
 }
 
+#popupScreen{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 4;
+    left: 0;
+    top: 0;
+    right: 0;
+    display: flex;
+}
+
+.alertDiv{
+    border: 2px solid white;
+    border-radius: 10px;
+    margin: auto;
+    background-color: #222222;
+    min-width: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80px;
+}
+
+#alertMsg{
+    color: white;
+    font-size: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-width: 105px;
+}
+
 .container{
     width: 100%;
     height: 92%;
     position: absolute;
-    z-index: 1;
+    z-index: 2;
     left: 0;
     top: 0;
+    right: 0;
 }
 
 #loginContainer{
@@ -115,7 +172,7 @@ body{
 
 .headerContent{
     width: 100%;
-    height: 10%;
+    min-height: 60px;
     opacity: 1;
     display: flex;
     justify-content: space-evenly;
@@ -140,7 +197,15 @@ body{
     margin-bottom: 5px;
 }
 
-.bodyContent{
+#bodySearchContainer{
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+    display: flex;
+    flex-direction: column;
+}
+
+#bodyMyListsContainer{
     width: 100%;
     height: 100%;
     opacity: 0.8;
@@ -155,24 +220,22 @@ body{
 }
 
 .searchBorder{
-    margin: 5px;
-    border-radius: 10px;
-    background-color: black;
-    width: 70%;
-    height: 40px;
+    
     display: flex;
     align-items: stretch;
-    border: 2px solid white;
+    
 }
 
 #inputSearch{
+    border: 2px solid white;
+    border-radius: 10px;
     background-color: black;
-    border: 0;
-    margin: auto;
+    margin: 5px;
+    width: 70%;
     height: 38px;
-    width: 90%;
     font-size: 16px;
     color: white;
+    outline: none;
 }
 
 #search-button{
@@ -183,21 +246,75 @@ body{
     background-color: black;
     color: white;
 }
+#search-button:active{
+    background-color: #ff5214;
+}
 
-.resultList{
-    color: white;
+#resultList{
     display: flex;
     flex-direction: column;
-    padding-top: 20px;
+    overflow-y: auto;
+}
+
+#resultList>span{
+    color: white;
+    margin-top: 20px;
+    margin: 10px auto;
     align-items: center;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.resultListItem{
+    padding: 2px;
+    background-color: #111111BB;
+    width: 98%;
+    min-height: 70px;
+    border: 1px solid #ff5214;
+    margin-top: 4px;
+    border-radius: 5px;
+    display: flex;
+}
+
+.resultListItem>img{
+    width: 50px;
+    height: 100%;
+}
+
+.resultListItem>div{
+    width: 50px;
+    height: 100%;
+    background-color: white;
+}
+
+.resultListItem>span{
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    align-self: center;
+    justify-self: center;
+    width: 100%;
+    text-align: center;
 }
 
 .footerContent{
-    z-index: 1;
-    width: 100%;
-    height: 40px;
+    z-index: 2;
+    width: 99%;
+    height: 20px;
     position: absolute;
-    top: 92%;
+    bottom: 0;
     left: 0;
+    right: 0;
     background-color: #ff5214da;
+    border: 1px solid orangered;
+    display: flex;
+    margin: auto;
+    justify-content: center;
+}
+
+.footerContent>span{
+    color: #222222;
+    text-shadow: 0px 0px 5px gray;
+    right: 0;
+    font-size: 12px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }

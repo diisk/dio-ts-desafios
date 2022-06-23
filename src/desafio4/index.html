@@ -9,7 +9,14 @@
     <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
+    <div id="popupScreen" class="esconder">
+        <div class="alertDiv">
+            <span id="alertMsg"></span>
+        </div>
+    </div>
+    <div id="blockScreen" class="esconder"></div>
     <div class="background"></div>
+    <div class="backgroundOpacity"></div>
     <div class="container">
         <div id="loginContainer" class="esconder">
             <img src="svg/logotmdb.svg" alt="logo"/>
@@ -19,32 +26,40 @@
                     <br>Se não, <a href="https://www.themoviedb.org/signup" target="_blank">clique aqui</a> para realiza-lo.
                 </div>
             </div>
-            <div class="loginCampos">
-                <input id="login" type="text" autocomplete="off" placeholder="Usuário" onkeyup="preencherLogin(event)">
-                <input id="senha" type="password" autocomplete="off" placeholder="Senha" type="password" onkeyup="preencherSenha(event)">
-                <button id="login-button" type="button" disabled>Continuar</button>
+            <form class="loginCampos">
+                <input id="login" type="text" autocomplete="off" placeholder="Usuário" onkeyup="validateLoginButton()">
+                <input id="senha" type="password" autocomplete="off" placeholder="Senha" type="password" onkeyup="validateLoginButton()">
+                <button id="login-button" type="submit" disabled>Continuar</button>
                 <span id="erroMsg"></span>
-            </div>
+            </form>
         </div>
         <div id="mainContainer" class="">
             <header class="headerContent">
                 <button type="button" id="btnBuscar" class="headerButton selectedHeader"><i class="fas fa-search"></i><br>Buscar</button>
                 <button type="button" id="btnMinhasListas" class="headerButton"><i class="fas fa-book"></i><br>Minhas listas</button>
             </header>
-            <main class="bodyContent">
-                <div class="searchDiv">
-                    <input type="button" value="Pesquisar" id="search-button"/>
-                    <div class="searchBorder">
-                        <input type="text" id="inputSearch"/>
-                    </div>
+            <main id="bodySearchContainer">
+                <form class="searchDiv">
+                    <input type="submit" value="Pesquisar" id="search-button"/>
+                    <input type="text" autocomplete="off" id="inputSearch"/>
+                </form>
+                <div id="resultList">
+                    <!-- <span>20 resultados referente a "shrek" encontrados:</span>
+                    
+                    <div class="resultListItem">
+                        <img src="https://image.tmdb.org/t/p/w200/dyhaB19AICF7TO7CK2aD6KfymnQ.jpg" alt="shrek poster"/>
+                        <span>Shrek</span>
+                    </div> -->
                 </div>
-                <div class="resultList">
-                    Nenhum resultado foi encontrado!
-                </div>
+            </main>
+            <main id="bodyMyListsContainer" class="esconder">
+                
             </main>
         </div>
     </div>
-    <footer class="footerContent"></footer>
+    <footer class="footerContent">
+        <span>Developed by Lucas Rafael</span>
+    </footer>
     <!-- <div style="display: flex;">
         <div style="display: flex; width: 300px; height: 100px; justify-content: space-between; flex-direction: column;">
             <input id="login" placeholder="Login" onchange="preencherLogin(event)">
