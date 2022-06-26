@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,40 +9,46 @@
     <link href="fontawesome/css/all.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 </head>
+
 <body>
     <div id="popupScreen" class="esconder">
-        <div class="alertDiv">
-            <span id="alertMsg"></span>
-        </div>
+        <form id="popupContent" class="">
+             
+        </form>
     </div>
     <div id="blockScreen" class="esconder"></div>
     <div class="background"></div>
     <div class="backgroundOpacity"></div>
     <div class="container">
-        <div id="loginContainer" class="esconder">
-            <img src="svg/logotmdb.svg" alt="logo"/>
+        <div id="loginContainer" class="">
+            <img src="svg/logotmdb.svg" alt="logo" />
             <div class="loginInfo">
                 <div>
-                    Para continuar é necessário possuir um cadastro no themoviedb, caso já possua preencha o usuário e senha, e clique em continuar.
-                    <br>Se não, <a href="https://www.themoviedb.org/signup" target="_blank">clique aqui</a> para realiza-lo.
+                    Para continuar é necessário possuir um cadastro no themoviedb, caso já possua preencha o usuário e
+                    senha, e clique em continuar.
+                    <br>Se não, <a href="https://www.themoviedb.org/signup" target="_blank">clique aqui</a> para
+                    realiza-lo.
                 </div>
             </div>
             <form class="loginCampos">
                 <input id="login" type="text" autocomplete="off" placeholder="Usuário" onkeyup="validateLoginButton()">
-                <input id="senha" type="password" autocomplete="off" placeholder="Senha" type="password" onkeyup="validateLoginButton()">
+                <input id="senha" type="password" autocomplete="off" placeholder="Senha" type="password"
+                    onkeyup="validateLoginButton()">
                 <button id="login-button" type="submit" disabled>Continuar</button>
                 <span id="erroMsg"></span>
             </form>
         </div>
-        <div id="mainContainer" class="">
+        <div id="mainContainer" class="esconder">
             <header class="headerContent">
-                <button type="button" id="btnBuscar" class="headerButton selectedHeader"><i class="fas fa-search"></i><br>Buscar</button>
-                <button type="button" id="btnMinhasListas" class="headerButton"><i class="fas fa-book"></i><br>Minhas listas</button>
+                <button type="button" id="btnBuscar" class="headerButton selectedHeader"><i
+                        class="fas fa-search"></i><br>Buscar</button>
+                <button type="button" id="btnMinhasListas" class="headerButton"><i class="fas fa-book"></i><br>Minhas
+                    listas</button>
             </header>
             <main id="bodySearchContainer">
                 <form class="searchDiv">
-                    <input type="submit" value="Pesquisar" id="search-button"/>
-                    <input type="text" autocomplete="off" id="inputSearch"/>
+                    <input type="submit" value="Pesquisar" id="search-button" />
+                    <input type="text" autocomplete="off" id="inputSearch" />
                 </form>
                 <div id="resultList">
                     <!-- <span>20 resultados referente a "shrek" encontrados:</span>
@@ -53,7 +60,40 @@
                 </div>
             </main>
             <main id="bodyMyListsContainer" class="esconder">
-                
+                <input type="button" value="+Playlist" id="btnNovaPlaylist"/>
+                <div id="playlistsDiv">
+                    <!-- <span>Você não possui playlists!</span>
+                    <div class="selectedPlaylist">
+                        <div class="playlistItemInfo">
+                            <span>(50) Nome</span>
+                            <i class="fas fa-minus"></i>
+                        </div>
+                        <div class="playlistItemMovie">
+                            <img src="https://image.tmdb.org/t/p/w200/dyhaB19AICF7TO7CK2aD6KfymnQ.jpg" alt="poster"/>
+                            <span>Nome do filme</span>
+                        </div>
+                        <div class="playlistItemMovie">
+                            <img src="https://image.tmdb.org/t/p/w200/dyhaB19AICF7TO7CK2aD6KfymnQ.jpg" alt="poster"/>
+                            <span>Nome do filme</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="playlistItemInfo">
+                            <span>(50) Nome</span>
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="playlistItemInfo">
+                            <span>(50) Nome</span>
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="myListsFooter">
+                    <input type="button" value="Limpar" id="btnLimparPlaylist" class="myListsFooterBtn esconder"/>
+                    <input type="button" value="Excluir" id="btnExcluirPlaylist" class="myListsFooterBtn esconder"/>
+                </div>
             </main>
         </div>
     </div>
@@ -74,4 +114,5 @@
     </div> -->
 </body>
 <script src="js/resposta.js"></script>
+
 </html>
