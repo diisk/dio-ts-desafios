@@ -129,6 +129,9 @@ const btnMinhasListas = document.getElementById("btnMinhasListas") as HTMLButton
 
 const btnNovaPlaylist = document.getElementById("btnNovaPlaylist") as HTMLInputElement;
 
+const btnLimparPlaylist = document.getElementById("btnLimparPlaylist") as HTMLInputElement;
+const btnExcluirPlaylist = document.getElementById("btnExcluirPlaylist") as HTMLInputElement;
+
 const bodySearchContainer = document.getElementById("bodySearchContainer") as HTMLElement;
 const bodyMyListsContainer = document.getElementById("bodyMyListsContainer") as HTMLElement;
 
@@ -210,6 +213,14 @@ btnBuscar.addEventListener("click", () => {
         }
         global_state = STATE_SEARCH;
     }
+});
+
+btnLimparPlaylist.addEventListener("click",()=>{
+    clearSelectedPlaylist();
+});
+
+btnExcluirPlaylist.addEventListener("click",()=>{
+    deleteSelectedPlaylist();
 });
 
 btnMinhasListas.addEventListener("click", async () => {
@@ -350,10 +361,14 @@ async function criaPlaylistBtnCriar() {
         return;
     }
     showAlertPopup("Criando playlist...");
-    const response = await criarPlaylist(input.value, "Lista criada por https://github.com/diisk/dio-ts-desafios");
-    console.log(response);
-    await Playlist.atualizarPlaylists();
-    showAlertPopup(`Playlist criada com sucesso <i class="fas fa-check" style="color:green"></i>`);
+    const response: any = await criarPlaylist(input.value, "Lista criada por https://github.com/diisk/dio-ts-desafios");
+    if (response && response.success) {
+        await Playlist.atualizarPlaylists();
+        showAlertPopup(`Playlist criada com sucesso <i class="fas fa-check" style="color:green"></i>`);
+    } else {
+        showAlertPopup(`Ocorreu um erro <i class="fas fa-times" style="color:red"></i>`);
+    }
+
     switch (global_state) {
         case STATE_SEARCH:
             setTimeout(() => {
@@ -373,14 +388,41 @@ function selectPlaylist(index: number) {
     selectedPlaylist = index == -1 ? null : playlists[index];
     selectedMovie = null;
     atualizaMinhasListas();
-    [...document.getElementsByClassName("myListsFooterBtn")].map((btn)=>{
-        if(index==-1){
-            if(!btn.classList.contains("esconder")){
+    [...document.getElementsByClassName("myListsFooterBtn")].map((btn) => {
+        if (index == -1) {
+            if (!btn.classList.contains("esconder")) {
                 btn.classList.add("esconder");
             }
             return;
         }
         btn.classList.remove("esconder");
+    });
+}
+
+function showConfirmPopup(msg: string) {
+    return new Promise((resolve, reject) => {
+        resetPopups();
+        const popup = document.getElementById("popupContent") as HTMLDivElement;
+        popup.classList.add("confirmPopup")
+        popup.innerHTML = `
+        <span>${msg}</span>
+             <div>
+                <input type="button" value="Sim" id="confirmPopupBtnSim"/>
+                <input type="button" value="Não" id="confirmPopupBtnNao"/>
+             </div>
+        `;
+        (document.getElementById("confirmPopupBtnSim") as HTMLInputElement)
+            .addEventListener("click", () => {
+                closePopup();
+                resolve(true);
+            });
+        (document.getElementById("confirmPopupBtnNao") as HTMLInputElement)
+            .addEventListener("click", () => {
+                closePopup();
+                resolve(false);
+            });
+        setPopupScreen(true);
+        setBlockScreen(true);
     });
 }
 
@@ -402,7 +444,7 @@ function showCriarPlaylistPopup() {
     const popupContent = document.getElementById("popupContent") as HTMLDivElement;
     popupContent.classList.add("createPlaylistPopupDiv")
     popupContent.innerHTML = `
-            <input type="text" id="inputPlaylistName" placeholder="Nome da Playlist"/>
+            <input type="text" id="inputPlaylistName" autocomplete="off" placeholder="Nome da Playlist"/>
             <span id="inputPlaylistNameError"></span>
             <div>
                 <input type="submit" class="createPlaylistBtn" value="Criar" onclick='criaPlaylistBtnCriar()'/>
@@ -443,18 +485,57 @@ async function addSelectedToPlaylist(playlistId: number) {
 
 }
 
-async function removeSelectedFromPlaylist(playlistId: number) {
-    if(selectedMovie){
+async function removeSelectedFromPlaylist(playlistId: number = -1) {
+    if (selectedMovie) {
+        const msg = `Removido com sucesso <i class="fas fa-check" style="color:green"></i>`;
         showAlertPopup("Removendo da playlist...");
+        if (playlistId == -1 && selectedPlaylist) {
+            await removerFilmeDaLista(selectedMovie.id, selectedPlaylist.id);
+            await Playlist.atualizarPlaylists();
+            atualizaMinhasListas();
+            showAlertPopup(msg);
+            setTimeout(() => {
+                closePopup();
+            }, 2000);
+            return;
+        }
+
         await removerFilmeDaLista(selectedMovie.id, playlistId);
         await Playlist.atualizarPlaylists();
-        showAlertPopup(`Removido com sucesso <i class="fas fa-check" style="color:green"></i>`);
+
+        showAlertPopup(msg);
         setTimeout(() => {
             showChoosePlaylistsPopup(false);
         }, 2000);
     }
-    
+}
 
+async function clearSelectedPlaylist() {
+    const result = await showConfirmPopup("Deseja limpar essa playlist?");
+    if (result && selectedPlaylist) {
+        showAlertPopup("Limpando playlist...");
+        await limparLista(selectedPlaylist.id);
+        await Playlist.atualizarPlaylists();
+        atualizaMinhasListas();
+        showAlertPopup(`Playlist limpa com sucesso <i class="fas fa-check" style="color:green"></i>`);
+        setTimeout(() => {
+            closePopup();
+        }, 2000);
+    }
+}
+
+async function deleteSelectedPlaylist() {
+    const result = await showConfirmPopup("Deseja deletar essa playlist?");
+    if (result && selectedPlaylist) {
+        showAlertPopup("Deletando playlist...");
+        await deletarLista(selectedPlaylist.id);
+        await Playlist.atualizarPlaylists();
+        selectPlaylist(-1);
+        showAlertPopup(`Playlist deletada com sucesso <i class="fas fa-check" style="color:green"></i>`);
+        setTimeout(() => {
+            closePopup();
+        }, 2000);
+    }
 }
 
 async function showChoosePlaylistsPopup(update: boolean = true) {
@@ -488,7 +569,7 @@ async function showChoosePlaylistsPopup(update: boolean = true) {
     }
 
     popupContent.innerHTML = `
-    <input type="button" value="X" onclick='closePopup();'>
+    <button type="button" onclick='closePopup();'><i class="fas fa-times"></i></button>
             <div class="playlistDiv">
                 <span>${playlists.length > 0 ?
             (
@@ -506,13 +587,13 @@ async function showChoosePlaylistsPopup(update: boolean = true) {
     setBlockScreen(true);
 }
 
-function showMoviePopup(index: number,playlistIndex:number=-1) {
+function showMoviePopup(index: number, playlistIndex: number = -1) {
     let filme;
     let button = `<input type="button" value="Add/Remover" onclick='showChoosePlaylistsPopup();'>`;
-    if(playlistIndex>=0){
-        button = `<input type="button" value="Remover" onclick=''>`;
+    if (playlistIndex >= 0) {
+        button = `<input type="button" value="Remover" onclick='removeSelectedFromPlaylist();'>`;
         filme = playlists[playlistIndex].filmes[index];
-    }else{
+    } else {
         filme = lastSearch[index];
     }
     selectedMovie = filme;
@@ -526,9 +607,9 @@ function showMoviePopup(index: number,playlistIndex:number=-1) {
         }
         generos += filme.generos[i];
     }
-    
+
     popupContent.innerHTML = `
-    <input type="button" value="X" onclick='closePopup();'>
+    <button type="button" onclick='closePopup();'><i class="fas fa-times"></i></button>
     <div class="movieInfos">
                 <img src="https://image.tmdb.org/t/p/w200${filme.poster}" alt="poster_${filme.title}"/>
                 <div>
@@ -708,6 +789,6 @@ async function deletarLista(listId: number) {
     return await HttpClient.get({
         url: `
         https://api.themoviedb.org/3/list/${listId}?api_key=${apiKey}&session_id=${sessionId}`,
-        method: "POST"
+        method: "DELETE"
     })
 }

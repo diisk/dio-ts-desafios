@@ -94,6 +94,8 @@ const searchContainer = document.getElementById('search-container');
 const btnBuscar = document.getElementById("btnBuscar");
 const btnMinhasListas = document.getElementById("btnMinhasListas");
 const btnNovaPlaylist = document.getElementById("btnNovaPlaylist");
+const btnLimparPlaylist = document.getElementById("btnLimparPlaylist");
+const btnExcluirPlaylist = document.getElementById("btnExcluirPlaylist");
 const bodySearchContainer = document.getElementById("bodySearchContainer");
 const bodyMyListsContainer = document.getElementById("bodyMyListsContainer");
 let loginTimeOut;
@@ -171,6 +173,12 @@ btnBuscar.addEventListener("click", () => {
         }
         global_state = STATE_SEARCH;
     }
+});
+btnLimparPlaylist.addEventListener("click", () => {
+    clearSelectedPlaylist();
+});
+btnExcluirPlaylist.addEventListener("click", () => {
+    deleteSelectedPlaylist();
 });
 btnMinhasListas.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
     if (!btnMinhasListas.classList.contains("selectedHeader")) {
@@ -295,9 +303,13 @@ function criaPlaylistBtnCriar() {
         }
         showAlertPopup("Criando playlist...");
         const response = yield criarPlaylist(input.value, "Lista criada por https://github.com/diisk/dio-ts-desafios");
-        console.log(response);
-        yield Playlist.atualizarPlaylists();
-        showAlertPopup(`Playlist criada com sucesso <i class="fas fa-check" style="color:green"></i>`);
+        if (response && response.success) {
+            yield Playlist.atualizarPlaylists();
+            showAlertPopup(`Playlist criada com sucesso <i class="fas fa-check" style="color:green"></i>`);
+        }
+        else {
+            showAlertPopup(`Ocorreu um erro <i class="fas fa-times" style="color:red"></i>`);
+        }
         switch (global_state) {
             case STATE_SEARCH:
                 setTimeout(() => {
@@ -327,6 +339,32 @@ function selectPlaylist(index) {
         btn.classList.remove("esconder");
     });
 }
+function showConfirmPopup(msg) {
+    return new Promise((resolve, reject) => {
+        resetPopups();
+        const popup = document.getElementById("popupContent");
+        popup.classList.add("confirmPopup");
+        popup.innerHTML = `
+        <span>${msg}</span>
+             <div>
+                <input type="button" value="Sim" id="confirmPopupBtnSim"/>
+                <input type="button" value="Não" id="confirmPopupBtnNao"/>
+             </div>
+        `;
+        document.getElementById("confirmPopupBtnSim")
+            .addEventListener("click", () => {
+            closePopup();
+            resolve(true);
+        });
+        document.getElementById("confirmPopupBtnNao")
+            .addEventListener("click", () => {
+            closePopup();
+            resolve(false);
+        });
+        setPopupScreen(true);
+        setBlockScreen(true);
+    });
+}
 function showAlertPopup(message) {
     resetPopups();
     const popupContent = document.getElementById("popupContent");
@@ -343,7 +381,7 @@ function showCriarPlaylistPopup() {
     const popupContent = document.getElementById("popupContent");
     popupContent.classList.add("createPlaylistPopupDiv");
     popupContent.innerHTML = `
-            <input type="text" id="inputPlaylistName" placeholder="Nome da Playlist"/>
+            <input type="text" id="inputPlaylistName" autocomplete="off" placeholder="Nome da Playlist"/>
             <span id="inputPlaylistNameError"></span>
             <div>
                 <input type="submit" class="createPlaylistBtn" value="Criar" onclick='criaPlaylistBtnCriar()'/>
@@ -380,15 +418,56 @@ function addSelectedToPlaylist(playlistId) {
         }
     });
 }
-function removeSelectedFromPlaylist(playlistId) {
+function removeSelectedFromPlaylist(playlistId = -1) {
     return __awaiter(this, void 0, void 0, function* () {
         if (selectedMovie) {
+            const msg = `Removido com sucesso <i class="fas fa-check" style="color:green"></i>`;
             showAlertPopup("Removendo da playlist...");
+            if (playlistId == -1 && selectedPlaylist) {
+                yield removerFilmeDaLista(selectedMovie.id, selectedPlaylist.id);
+                yield Playlist.atualizarPlaylists();
+                atualizaMinhasListas();
+                showAlertPopup(msg);
+                setTimeout(() => {
+                    closePopup();
+                }, 2000);
+                return;
+            }
             yield removerFilmeDaLista(selectedMovie.id, playlistId);
             yield Playlist.atualizarPlaylists();
-            showAlertPopup(`Removido com sucesso <i class="fas fa-check" style="color:green"></i>`);
+            showAlertPopup(msg);
             setTimeout(() => {
                 showChoosePlaylistsPopup(false);
+            }, 2000);
+        }
+    });
+}
+function clearSelectedPlaylist() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield showConfirmPopup("Deseja limpar essa playlist?");
+        if (result && selectedPlaylist) {
+            showAlertPopup("Limpando playlist...");
+            yield limparLista(selectedPlaylist.id);
+            yield Playlist.atualizarPlaylists();
+            atualizaMinhasListas();
+            showAlertPopup(`Playlist limpa com sucesso <i class="fas fa-check" style="color:green"></i>`);
+            setTimeout(() => {
+                closePopup();
+            }, 2000);
+        }
+    });
+}
+function deleteSelectedPlaylist() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield showConfirmPopup("Deseja deletar essa playlist?");
+        if (result && selectedPlaylist) {
+            showAlertPopup("Deletando playlist...");
+            yield deletarLista(selectedPlaylist.id);
+            yield Playlist.atualizarPlaylists();
+            selectPlaylist(-1);
+            showAlertPopup(`Playlist deletada com sucesso <i class="fas fa-check" style="color:green"></i>`);
+            setTimeout(() => {
+                closePopup();
             }, 2000);
         }
     });
@@ -422,7 +501,7 @@ function showChoosePlaylistsPopup(update = true) {
         `;
         }
         popupContent.innerHTML = `
-    <input type="button" value="X" onclick='closePopup();'>
+    <button type="button" onclick='closePopup();'><i class="fas fa-times"></i></button>
             <div class="playlistDiv">
                 <span>${playlists.length > 0 ?
             (playlists.length == 1 ?
@@ -441,7 +520,7 @@ function showMoviePopup(index, playlistIndex = -1) {
     let filme;
     let button = `<input type="button" value="Add/Remover" onclick='showChoosePlaylistsPopup();'>`;
     if (playlistIndex >= 0) {
-        button = `<input type="button" value="Remover" onclick=''>`;
+        button = `<input type="button" value="Remover" onclick='removeSelectedFromPlaylist();'>`;
         filme = playlists[playlistIndex].filmes[index];
     }
     else {
@@ -459,7 +538,7 @@ function showMoviePopup(index, playlistIndex = -1) {
         generos += filme.generos[i];
     }
     popupContent.innerHTML = `
-    <input type="button" value="X" onclick='closePopup();'>
+    <button type="button" onclick='closePopup();'><i class="fas fa-times"></i></button>
     <div class="movieInfos">
                 <img src="https://image.tmdb.org/t/p/w200${filme.poster}" alt="poster_${filme.title}"/>
                 <div>
@@ -645,7 +724,7 @@ function deletarLista(listId) {
         return yield HttpClient.get({
             url: `
         https://api.themoviedb.org/3/list/${listId}?api_key=${apiKey}&session_id=${sessionId}`,
-            method: "POST"
+            method: "DELETE"
         });
     });
 }
