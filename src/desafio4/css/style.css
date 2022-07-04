@@ -1,11 +1,12 @@
-body{
+body {
     box-sizing: border-box;
     margin: 0;
     width: 100%;
     background-color: #222222;
+    overflow: hidden;
 }
 
-.background{
+.background {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -15,19 +16,19 @@ body{
     right: 0;
 }
 
-.backgroundOpacity{
+.backgroundOpacity {
     width: 100%;
     height: 100%;
     position: absolute;
     z-index: 1;
-    background-color: #00000033;
+    background-color: #000000DD;
     left: 0;
     top: 0;
     right: 0;
     display: none;
 }
 
-#blockScreen{
+#blockScreen {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -38,11 +39,11 @@ body{
     right: 0;
 }
 
-.esconder{
-    display: none!important;
+.esconder {
+    display: none !important;
 }
 
-#popupScreen{
+#popupScreen {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -53,7 +54,7 @@ body{
     display: flex;
 }
 
-.alertDiv{
+.alertDiv {
     border: 1px solid #ff5214;
     border-radius: 10px;
     margin: auto;
@@ -65,14 +66,14 @@ body{
     min-height: 80px;
 }
 
-.alertDiv>span{
+.alertDiv>span {
     color: white;
     font-size: 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-width: 134px;
 }
 
-.confirmPopup{
+.confirmPopup {
     border: 1px solid #ff5214;
     border-radius: 10px;
     margin: auto;
@@ -85,7 +86,7 @@ body{
     min-height: 120px;
 }
 
-.confirmPopup>span{
+.confirmPopup>span {
     color: white;
     font-size: 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -93,11 +94,11 @@ body{
     text-align: center;
 }
 
-.confirmPopup>div{
+.confirmPopup>div {
     margin-top: 15px;
 }
 
-.confirmPopup>div>input{
+.confirmPopup>div>input {
     color: #ff5214;
     border-radius: 20px;
     border: 2px solid #ff5214;
@@ -109,12 +110,12 @@ body{
     background-color: #111111;
 }
 
-.confirmPopup>div>input:active{
+.confirmPopup>div>input:active {
     color: #111111;
     background-color: #ff5214;
 }
 
-.defaultPopupDiv{
+.defaultPopupDiv {
     display: flex;
     flex-direction: column;
     width: 340px;
@@ -125,7 +126,7 @@ body{
     border-radius: 10px;
 }
 
-.defaultPopupDiv>button{
+.defaultPopupDiv>button {
     background-color: transparent;
     color: lightgrey;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -137,14 +138,14 @@ body{
     margin-right: 20px;
 }
 
-.movieInfos>img{
+.movieInfos>img {
     width: 200px;
     height: 280px;
     margin-bottom: 30px;
     align-self: center;
 }
 
-.movieInfos{
+.movieInfos {
     margin-top: 10px;
     display: flex;
     flex-direction: column;
@@ -155,16 +156,16 @@ body{
     padding: 10px;
 }
 
-.movieInfos>div{
+.movieInfos>div>div {
     margin-bottom: 20px;
     text-align: justify;
 }
 
-.movieInfos>div>span{
+.movieInfos>div>div>span {
     font-weight: bold;
 }
 
-.playlistDiv{
+.playlistDiv {
     margin-top: 10px;
     display: flex;
     flex-direction: column;
@@ -177,11 +178,11 @@ body{
     align-items: center;
 }
 
-.playlistDiv>span{
+.playlistDiv>span {
     margin-bottom: 30px;
 }
 
-.playlistDiv>div{
+.playlistDiv>div {
     border: 1px solid white;
     border-radius: 20px;
     padding: 15px;
@@ -190,21 +191,21 @@ body{
     align-items: center;
     justify-content: space-between;
     margin-bottom: 10px;
- }
+}
 
- .playlistDiv>div>i{
+.playlistDiv>div>i {
     color: #ff5214;
- }
+}
 
-.defaultButtonsDiv{
-    padding: 20px; 
+.defaultButtonsDiv {
+    padding: 20px;
     display: flex;
     width: 90%;
     margin-top: auto;
     justify-content: space-around;
 }
 
-.defaultButtonsDiv>input{
+.defaultButtonsDiv>input {
     background-color: #111111;
     border-radius: 20px;
     border: 1px solid #ff5214;
@@ -215,13 +216,13 @@ body{
     width: 145px;
 }
 
-.defaultButtonsDiv>input:active{
+.defaultButtonsDiv>input:active {
     background-color: #ff5214;
     border: 1px solid #111111;
     color: #111111;
 }
 
-.createPlaylistPopupDiv{
+.createPlaylistPopupDiv {
     display: flex;
     flex-direction: column;
     width: 340px;
@@ -234,7 +235,7 @@ body{
     justify-content: center;
 }
 
-#inputPlaylistName{
+#inputPlaylistName {
     border-radius: 20px;
     background-color: #222222;
     border: 2px solid white;
@@ -248,7 +249,7 @@ body{
     margin-top: 10px;
 }
 
-#inputPlaylistNameError{
+#inputPlaylistNameError {
     color: #EE3333;
     margin-top: 2px;
     margin-bottom: 0px;
@@ -259,15 +260,15 @@ body{
     width: 100%;
 }
 
-#inputPlaylistName::placeholder{
+#inputPlaylistName::placeholder {
     color: gray;
 }
 
-.createPlaylistPopupDiv>div{
+.createPlaylistPopupDiv>div {
     padding-top: 20px;
 }
 
-.createPlaylistBtn{
+.createPlaylistBtn {
     background-color: #222222;
     border-radius: 20px;
     border: 2px solid #ff5214;
@@ -280,12 +281,12 @@ body{
     font-weight: 600;
 }
 
-.createPlaylistBtn:active{
+.createPlaylistBtn:active {
     background-color: #ff5214;
     color: #222222;
 }
 
-.container{
+.container {
     width: 100%;
     height: 97%;
     position: absolute;
@@ -296,14 +297,19 @@ body{
     overflow: hidden;
 }
 
-#loginContainer{
+#loginContainer {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
 }
 
-#loginContainer>img{
+#containerHeader {
+    width: 100%;
+    display: flex;
+}
+
+#containerHeader>img {
     margin: 30px auto;
     width: 80%;
     border-radius: 10px;
@@ -311,12 +317,12 @@ body{
     padding: 10px;
 }
 
-.loginInfo{
+.loginInfo {
     height: 20%;
     display: flex;
 }
 
-.loginInfo>div{
+.loginInfo>div {
     text-align: justify;
     background-color: #ff5214da;
     padding: 20px 10px 20px 10px;
@@ -328,7 +334,7 @@ body{
     border-radius: 20px;
 }
 
-.loginCampos{
+.loginCampos {
     height: 60%;
     display: flex;
     flex-direction: column;
@@ -336,7 +342,7 @@ body{
     justify-content: center;
 }
 
-.loginCampos>input{
+.loginCampos>input {
     background-color: transparent;
     border-radius: 20px;
     border: 2px solid #ff5214da;
@@ -348,7 +354,7 @@ body{
     outline: none;
 }
 
-.loginCampos>button{
+.loginCampos>button {
     border-radius: 20px;
     border: none;
     height: 40px;
@@ -360,31 +366,31 @@ body{
     color: #222222;
 }
 
-.loginCampos>button:disabled{
+.loginCampos>button:disabled {
     background-color: transparent;
     border: 2px solid gray;
     color: gray;
 }
 
-.loginCampos>span{
+.loginCampos>span {
     color: white;
     width: 100%;
     height: 80px;
     text-align: center;
 }
 
-.loginCampos>input::placeholder{
+.loginCampos>input::placeholder {
     color: white;
 }
 
-#mainContainer{
+#mainContainer {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.headerContent{
+.headerContent {
     width: 100%;
     min-height: 60px;
     opacity: 1;
@@ -392,26 +398,26 @@ body{
     justify-content: space-evenly;
 }
 
-.headerButton{
+.headerButton {
     color: white;
     border: 0;
     width: 100%;
     background-color: transparent;
-    
+
     padding: 0px 10px;
 }
 
-.selectedHeader{
+.selectedHeader {
     color: #ff5214da;
     border-bottom: 2px solid #ff5214da;
 }
 
-.headerButton>i{
+.headerButton>i {
     font-size: 25px;
     margin-bottom: 5px;
 }
 
-#bodySearchContainer{
+#bodySearchContainer {
     width: 100%;
     height: 100%;
     opacity: 0.8;
@@ -419,28 +425,28 @@ body{
     flex-direction: column;
 }
 
-#bodyMyListsContainer{
+#bodyMyListsContainer {
     width: 100%;
-    height: 100%;
     opacity: 0.8;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 
-.searchDiv{
+.searchDiv {
     display: flex;
     justify-content: center;
     margin-top: 10px;
 }
 
-.searchBorder{
-    
+.searchBorder {
+
     display: flex;
     align-items: stretch;
-    
+
 }
 
-#inputSearch{
+#inputSearch {
     border: 2px solid white;
     border-radius: 20px;
     background-color: black;
@@ -452,7 +458,7 @@ body{
     outline: none;
 }
 
-#search-button{
+#search-button {
     border-radius: 20px;
     height: 35px;
     margin: auto 0px;
@@ -460,18 +466,19 @@ body{
     background-color: black;
     color: white;
 }
-#search-button:active{
+
+#search-button:active {
     background-color: #ff5214;
 }
 
-#resultList{
+#resultList {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
     max-height: 82%;
 }
 
-#resultList>span{
+#resultList>span {
     color: white;
     margin-top: 20px;
     margin: 10px auto;
@@ -480,7 +487,7 @@ body{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.resultListItem{
+.resultListItem {
     padding: 2px;
     background-color: #111111BB;
     width: 98%;
@@ -491,18 +498,18 @@ body{
     display: flex;
 }
 
-.resultListItem>img{
+.resultListItem>img {
     width: 50px;
     height: 100%;
 }
 
-.resultListItem>div{
+.resultListItem>div {
     width: 50px;
     height: 100%;
     background-color: white;
 }
 
-.resultListItem>span{
+.resultListItem>span {
     color: white;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     align-self: center;
@@ -511,7 +518,7 @@ body{
     text-align: center;
 }
 
-#btnNovaPlaylist{
+#btnNovaPlaylist {
     color: #ff5214;
     border: 2px solid #ff5214;
     background-color: #111111;
@@ -527,40 +534,40 @@ body{
     margin-bottom: 10px;
 }
 
-#btnNovaPlaylist:active{
+#btnNovaPlaylist:active {
     color: #111111;
     background-color: #ff5214;
 }
 
-#playlistsDiv{
+#playlistsDiv {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    max-height: 550px;
+    max-height: 47rem;
 }
 
-#playlistsDiv>span{
-    color:white;
+#playlistsDiv>span {
+    color: white;
     align-self: center;
     margin: 10px;
 }
 
-.playlistItemInfo{
+.playlistItemInfo {
     height: 65px;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.selectedPlaylist>.playlistItemInfo{
+.selectedPlaylist>.playlistItemInfo {
     background-color: #444444;
 }
 
-.selectedPlaylist>.playlistItemMovie{
+.selectedPlaylist>div>.playlistItemMovie {
     display: flex;
 }
 
-.playlistItemInfo>span{
+.playlistItemInfo>span {
     margin-left: 15px;
     color: white;
     font-size: 16px;
@@ -568,25 +575,25 @@ body{
     font-weight: 600;
 }
 
-.playlistItemInfo>i{
+.playlistItemInfo>i {
     margin-right: 30px;
     color: #ff5214;
 }
 
-.playlistItemMovie{
+.playlistItemMovie {
     height: 60px;
     background-color: #333333;
     display: none;
     align-items: center;
 }
 
-.playlistItemMovie>img{
+.playlistItemMovie>img {
     height: 55px;
     width: 40px;
     margin-left: 5px;
 }
 
-.playlistItemMovie>span{
+.playlistItemMovie>span {
     color: white;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin-left: 10px;
@@ -594,15 +601,14 @@ body{
     margin: auto;
 }
 
-.myListsFooter{
+.myListsFooter {
     display: flex;
     justify-content: center;
-    padding-top: 10px;
-    margin-top: auto;
-    margin-bottom: 15px;
+    justify-self: flex-end;
+    min-height: 1.5rem;
 }
 
-.myListsFooter>input{
+.myListsFooter>input {
     color: #ff5214;
     border: 2px solid #ff5214;
     border-radius: 20px;
@@ -614,9 +620,8 @@ body{
     font-weight: 600;
 }
 
-.footerContent{
+.footerContent {
     z-index: 2;
-    width: 100%;
     height: 20px;
     position: absolute;
     bottom: 0;
@@ -628,10 +633,338 @@ body{
     justify-content: center;
 }
 
-.footerContent>span{
+.footerContent>span {
     color: #222222;
     text-shadow: 0px 0px 5px gray;
     right: 0;
     font-size: 12px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+@media (max-width: 769px) {
+    .esconderCel {
+        display: none !important;
+    }
+}
+
+@media (min-width: 770px) {
+    body {
+        background-image: url("../img/bg.jpg");
+    }
+
+    .backgroundOpacity {
+        display: flex;
+    }
+
+    #containerHeader {
+        background-color: #000000BB;
+        width: 100%;
+    }
+
+    #containerHeader>img {
+        margin: 0px;
+        background-color: transparent;
+        width: 300px;
+        padding: 20px;
+    }
+
+    .headerButton:hover {
+        background-color: #FFFFFF44;
+        color: #ff5214da;
+    }
+    
+    .selectedHeader:hover {
+        color: #ff5214da;
+        background-color: transparent;
+    }
+
+    #search-button:hover{
+        border: 2px solid #ff5214;
+    }
+
+    .alertDiv{
+        margin: auto;
+        background-color: #ff5214;
+        border: 2px solid #111111;
+        box-shadow: 0px 0px 20px white;
+        width: 300px;
+    }
+
+    .defaultPopupDiv{
+        background-color: #111111;
+        width: min-content;
+        height: min-content;
+        margin: auto;
+        padding: 0px;
+        border: 2px solid white;
+    }
+
+    .movieInfos{
+        flex-direction: row;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .movieInfos>img{
+        width: 330px;
+        height: 500px;
+        align-self: flex-start;
+        padding: 0px;
+        margin: 0px;
+    }
+
+    .movieInfos>div{
+        width: 400px;
+        margin-left: 30px;
+    }
+
+    .playlistDiv{
+        width: 600px;
+    }
+
+    .createPlaylistPopupDiv {
+        background-color: #111111;
+        border: 2px solid white;
+    }
+
+    #inputPlaylistName {
+        border: 2px solid #ff5214;
+        background-color: #FFFFFF22;
+    }
+
+    .createPlaylistBtn{
+        background-color: #ff5214;
+    }
+
+    .createPlaylistBtn:active{
+        background-color: #111111;
+        color: #ff5214;
+    }
+
+    .createPlaylistBtn:hover{
+        box-shadow: 0px 0px 10px white;
+    }
+
+    .confirmPopup{
+        border: 2px solid white;
+        background-color: #111111;
+    }
+
+    .confirmPopup>div>input{
+        color: white;
+        background-color: #ff5214;
+    }
+
+    .confirmPopup>div>input:active{
+        color: #ff5214;
+        background-color: #111111;
+    }
+
+    .confirmPopup>div>input:hover{
+        box-shadow: 0px 0px 10px white;
+    }
+
+    .defaultButtonsDiv>input{
+        background-color: #ff5214;
+        color: white;
+    }
+
+    .defaultButtonsDiv>input:active{
+        background-color: #111111;
+        color: #ff5214;
+        border: 2px solid #ff5214;
+    }
+
+    .defaultButtonsDiv>input:hover{
+        box-shadow: 0px 0px 10px white;
+    }
+
+    .loginInfo>div {
+        text-align: center;
+        background-color: #FFFFFF44;
+        border: 2px solid white;
+        width: 500px;
+    }
+
+    .loginInfo>div>a {
+        text-decoration: none;
+        color: #ff5214;
+    }
+
+    .loginCampos {
+        width: 400px;
+        margin: 0px auto;
+        border: 2px solid white;
+        border-radius: 10px;
+        height: 300px;
+        background-color: #FFFFFF22;
+    }
+
+    .loginCampos>input {
+        border: 2px solid white;
+        color: #ff5214;
+        text-align: center;
+        background-color: #00000066;
+    }
+
+    .loginCampos>input::placeholder {
+        color: #ff5214;
+    }
+
+    #login {
+        margin-top: 50px;
+    }
+
+    #login-button {
+        border: 2px solid white;
+        color: white;
+        background-color: #111111;
+    }
+
+    #login-button:hover {
+        border: 2px solid #ff5214;
+    }
+
+    #login-button:active {
+        background-color: #ff5214;
+        border: 2px solid #ff5214;
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #ff5214;
+    }
+
+    #resultList>span {
+        justify-self: center;
+        margin-top: 30px;
+    }
+
+    #resultList>div {
+        margin-top: 30px;
+        overflow-x: auto;
+        width: 100%;
+        overflow-y: hidden;
+        display: flex;
+    }
+
+
+    .resultListItem {
+        flex-direction: column;
+        min-width: 200px;
+        height: min-content;
+        padding: 20px;
+        border: none;
+        align-items: center;
+        background-color: transparent;
+    }
+
+    .resultListItem:hover {
+       transform: scale(1.1);
+       border-radius: 30px;
+       transition: 0.5s;
+    }
+
+    .resultListItem:hover>span {
+        color: #ff5214;
+     }
+
+    .resultListItem>img {
+        width: 200px;
+        height: 300px;
+        border-radius: 20px;
+    }
+
+    .resultListItem>span {
+        margin-top: 10px;
+        text-shadow: 2px 2px 3px #ff5214;
+    }
+
+    #btnNovaPlaylist{
+        margin: 30px 0px;
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        text-align: center;
+        border: none;
+        background-color: #ff5214;
+        color: white;
+    }
+
+    #btnNovaPlaylist:active{
+        background-color: #111111;
+        color: #ff5214;
+    }
+
+    #btnNovaPlaylist:hover{
+        box-shadow: 0px 0px 20px white;
+    }
+
+    #playlistsDiv{
+        height: 35rem;
+    }
+
+    #playlistsDiv>div:hover{
+        border: 2px solid #ff5214;
+    }
+
+    .selectedPlaylist:hover{
+        border: none!important;
+    }
+
+    .selectedPlaylist>div{
+        display: flex;
+        flex-wrap: wrap;
+        background-color: #333333;
+        padding: 0px 30px
+    }
+
+    .playlistItemMovie{
+        flex-direction: column;
+        width: 150px;
+        height: min-content;
+        align-items: center;
+        padding: 10px 0px;
+        background-color: transparent;
+    }
+
+    .playlistItemMovie:hover{
+        transform: scale(1.1);
+    }
+
+    .playlistItemMovie>img{
+        margin: 0px;
+        width: 130px;
+        height: 190px;
+    }
+
+    .playlistItemMovie>span{
+        margin-bottom: 5px;
+    }
+
+    .myListsFooter{
+        margin: 0px 30px;
+        padding: 10px;
+        justify-content: space-evenly;
+    }
+
+    .myListsFooter>input{
+        min-width: 300px;
+        min-height: 50px;
+        border-radius: 40px;
+        font-size: 22px;
+        background-color: #ff5214;
+        color: white;
+    }
+
+    .myListsFooter>input:active{
+        background-color: #111111;
+    }
+
+    .myListsFooter>input:hover{
+        box-shadow: 0px 0px 20px white;
+    }
 }

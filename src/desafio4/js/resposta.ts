@@ -1,8 +1,11 @@
+//VARS
 const apiKey = '3f301be7381a03ad8d352314dcc3ec1d';
 let requestToken: string;
 let sessionId: string;
 
 let loadingTimeout: number | undefined;
+let loginTimeOut:number;
+let playlistErrorTimeout: number;
 
 let selectedMovie: Filme | null;
 let selectedPlaylist: Playlist | null;
@@ -15,11 +18,13 @@ let global_state = STATE_SEARCH;
 const lastSearch: Filme[] = [];
 const playlists: Playlist[] = [];
 
+//TYPES
 type Genero = {
     id: number
     name: string
 }
 
+//CLASSES
 class Playlist {
     readonly id: number;
     readonly name: string;
@@ -82,7 +87,7 @@ class Filme {
     readonly title: string;
     readonly lancamento: Date;
     readonly sinopse?: string;
-    readonly poster?: string;
+    private poster?:string;
     readonly generos: string[] = [];
 
     constructor(
@@ -96,7 +101,9 @@ class Filme {
         this.id = id;
         this.title = title;
         this.sinopse = sinopse;
-        this.poster = poster;
+        if(poster){
+            this.poster = poster;
+        }
         this.lancamento = new Date(lancamento);
         if (genre_ids) {
             for (let i = 0; i < genre_ids.length; i++) {
@@ -106,6 +113,13 @@ class Filme {
                 }
             }
         }
+    }
+
+    public getPosterLink(){
+        if(this.poster){
+            return "https://image.tmdb.org/t/p/w200"+this.poster;
+        }
+        return "img/not-found.jpg";
     }
 
     private static getGeneroById(id: number) {
@@ -118,31 +132,6 @@ class Filme {
     }
 
 }
-
-
-const loginButton = document.getElementById('login-button') as HTMLButtonElement;
-const searchButton = document.getElementById('search-button') as HTMLButtonElement;
-const searchContainer = document.getElementById('search-container') as HTMLDivElement;
-
-const btnBuscar = document.getElementById("btnBuscar") as HTMLButtonElement;
-const btnMinhasListas = document.getElementById("btnMinhasListas") as HTMLButtonElement;
-
-const btnNovaPlaylist = document.getElementById("btnNovaPlaylist") as HTMLInputElement;
-
-const btnLimparPlaylist = document.getElementById("btnLimparPlaylist") as HTMLInputElement;
-const btnExcluirPlaylist = document.getElementById("btnExcluirPlaylist") as HTMLInputElement;
-
-const bodySearchContainer = document.getElementById("bodySearchContainer") as HTMLElement;
-const bodyMyListsContainer = document.getElementById("bodyMyListsContainer") as HTMLElement;
-
-
-let loginTimeOut: number;
-loginButton.addEventListener('click', async (e) => {
-    e.preventDefault();
-    const username = (document.getElementById('login') as HTMLInputElement).value;
-    const password = (document.getElementById('senha') as HTMLInputElement).value;
-    login(username, password);
-});
 
 class HttpClient {
     static async get(obj: { url: string, method: string, body?: any }) {
@@ -178,30 +167,31 @@ class HttpClient {
     }
 }
 
-async function login(username: string, password: string) {
-    setLoading(true);
-    await criarRequestToken();
-    const result: any = await logar(username, password);
-    if (result && result.success) {
-        await criarSessao();
-        await carregaGeneros();
-        setLoading(false);
-        (document.getElementById("loginContainer") as HTMLDivElement).classList.add("esconder");
-        (document.getElementById("mainContainer") as HTMLDivElement).classList.remove("esconder");
-        return;
-    }
-    setLoading(false)
-    if (loginTimeOut) {
-        clearTimeout(loginTimeOut);
-    }
 
-    const erroSpan = document.getElementById("erroMsg") as HTMLSpanElement;
-    erroSpan.innerText = "Usuário ou senha inválidos!";
-    loginTimeOut = setTimeout(() => {
-        erroSpan.innerText = '';
-        clearTimeout();
-    }, 5000);
-}
+//EVENTS
+const loginButton = document.getElementById('login-button') as HTMLButtonElement;
+const searchButton = document.getElementById('search-button') as HTMLButtonElement;
+const searchContainer = document.getElementById('search-container') as HTMLDivElement;
+
+const btnBuscar = document.getElementById("btnBuscar") as HTMLButtonElement;
+const btnMinhasListas = document.getElementById("btnMinhasListas") as HTMLButtonElement;
+
+const btnNovaPlaylist = document.getElementById("btnNovaPlaylist") as HTMLInputElement;
+
+const btnLimparPlaylist = document.getElementById("btnLimparPlaylist") as HTMLInputElement;
+const btnExcluirPlaylist = document.getElementById("btnExcluirPlaylist") as HTMLInputElement;
+
+const bodySearchContainer = document.getElementById("bodySearchContainer") as HTMLElement;
+const bodyMyListsContainer = document.getElementById("bodyMyListsContainer") as HTMLElement;
+
+
+
+loginButton.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const username = (document.getElementById('login') as HTMLInputElement).value;
+    const password = (document.getElementById('senha') as HTMLInputElement).value;
+    login(username, password);
+});
 
 btnBuscar.addEventListener("click", () => {
     if (!btnBuscar.classList.contains("selectedHeader")) {
@@ -271,21 +261,49 @@ searchButton.addEventListener('click', async (event) => {
     } else {
         innerHtml += `<span>Nenhum resultado referente à "${inputSearch.value}" foi encontrado!</span>`;
     }
+    innerHtml+=`<div>`;
     lastSearch.map((filme, index) => {
         innerHtml += `
         <div class="resultListItem" onclick='openLastSearchMovie(${index})'>
-            ${filme.poster ? (
-                `<img src="https://image.tmdb.org/t/p/w200${filme.poster}" alt="shrek poster"/>`) :
-                `<div></div>`}
+        <img src="${filme.getPosterLink()}" alt="poster_${filme.title}"/>
             <span>${filme.title}</span>
         </div>
         `;
     });
     inputSearch.value = "";
-    resultList.innerHTML = innerHtml;
+    resultList.innerHTML = innerHtml+`</div>`;
 })
 
-login("diisk", "123456");
+//LOADING
+carregaGeneros();
+
+//FUNCTIONS
+
+async function login(username: string, password: string) {
+    setLoading(true);
+    await criarRequestToken();
+    const result: any = await logar(username, password);
+    if (result && result.success) {
+        await criarSessao();
+        await carregaGeneros();
+        setLoading(false);
+        (document.getElementById("loginContainer") as HTMLDivElement).classList.add("esconder");
+        (document.getElementById("containerHeader") as HTMLDivElement).classList.add("esconderCel");
+        (document.getElementById("mainContainer") as HTMLDivElement).classList.remove("esconder");
+        return;
+    }
+    setLoading(false)
+    if (loginTimeOut) {
+        clearTimeout(loginTimeOut);
+    }
+
+    const erroSpan = document.getElementById("erroMsg") as HTMLSpanElement;
+    erroSpan.innerText = "Usuário ou senha inválidos!";
+    loginTimeOut = setTimeout(() => {
+        erroSpan.innerText = '';
+        clearTimeout();
+    }, 5000);
+}
 
 function setLoading(loading: boolean) {
     if (loadingTimeout) {
@@ -324,7 +342,7 @@ function atualizaMinhasListas() {
             const filme = pl.filmes[j];
             movies += `
             <div class="playlistItemMovie" onclick='showMoviePopup(${j},${i})'>
-                <img src="https://image.tmdb.org/t/p/w200${filme.poster}" alt="poster_${filme.title}"/>
+                <img src="${filme.getPosterLink()}" alt="poster_${filme.title}"/>
                 <span>${filme.title}</span>
             </div>
             `;
@@ -335,7 +353,9 @@ function atualizaMinhasListas() {
                 <span>(${pl.filmes.length}) ${pl.name}</span>
                 <i class="fas fa-${selected ? "minus" : "plus"}"></i>
             </div>
+            <div>
             ${movies}
+            </div>
         </div>
         `;
     }
@@ -354,7 +374,8 @@ function criaPlaylistBtnCancelar() {
     }
 }
 
-async function criaPlaylistBtnCriar() {
+async function criaPlaylistBtnCriar(event:MouseEvent) {
+    event.preventDefault();
     const input = document.getElementById("inputPlaylistName") as HTMLInputElement;
     if (input.value.length == 0) {
         setCriarPlaylistError("Nome inválido!");
@@ -447,7 +468,7 @@ function showCriarPlaylistPopup() {
             <input type="text" id="inputPlaylistName" autocomplete="off" placeholder="Nome da Playlist"/>
             <span id="inputPlaylistNameError"></span>
             <div>
-                <input type="submit" class="createPlaylistBtn" value="Criar" onclick='criaPlaylistBtnCriar()'/>
+                <input type="submit" class="createPlaylistBtn" value="Criar" onclick='criaPlaylistBtnCriar(event)'/>
                 <input type="button" class="createPlaylistBtn" value="Cancelar" onclick='criaPlaylistBtnCancelar()'/>
             </div>
     `;
@@ -455,11 +476,8 @@ function showCriarPlaylistPopup() {
     setBlockScreen(true);
 }
 
-let playlistErrorTimeout: number;
-
 function setCriarPlaylistError(msg: string) {
     (document.getElementById("inputPlaylistNameError") as HTMLSpanElement).innerText = msg;
-    console.log(document.getElementById("inputPlaylistNameError"));
     if (playlistErrorTimeout) {
         clearTimeout(playlistErrorTimeout);
     }
@@ -611,7 +629,8 @@ function showMoviePopup(index: number, playlistIndex: number = -1) {
     popupContent.innerHTML = `
     <button type="button" onclick='closePopup();'><i class="fas fa-times"></i></button>
     <div class="movieInfos">
-                <img src="https://image.tmdb.org/t/p/w200${filme.poster}" alt="poster_${filme.title}"/>
+                <img src="${filme.getPosterLink()}" alt="poster_${filme.title}"/>
+                <div>
                 <div>
                     <span>Nome:</span> ${filme.title}
                 </div>
@@ -623,7 +642,8 @@ function showMoviePopup(index: number, playlistIndex: number = -1) {
                 </div>
                 <div>
                     <span>Sinopse:</span> ${filme.sinopse}
-                </div>
+                    </div>
+                    </div>
             </div>
             <div class="defaultButtonsDiv">
                 ${button}
@@ -678,7 +698,7 @@ function validateLoginButton() {
     }
 }
 
-carregaGeneros();
+//GET/POST FUNCTIONS
 
 async function procurarFilme(query: string) {
     query = encodeURI(query)

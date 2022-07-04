@@ -8,10 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+//VARS
 const apiKey = '3f301be7381a03ad8d352314dcc3ec1d';
 let requestToken;
 let sessionId;
 let loadingTimeout;
+let loginTimeOut;
+let playlistErrorTimeout;
 let selectedMovie;
 let selectedPlaylist;
 const STATE_SEARCH = 0;
@@ -19,6 +22,7 @@ const STATE_MYLISTS = 1;
 let global_state = STATE_SEARCH;
 const lastSearch = [];
 const playlists = [];
+//CLASSES
 class Playlist {
     constructor(id, name) {
         this.filmes = [];
@@ -68,7 +72,9 @@ class Filme {
         this.id = id;
         this.title = title;
         this.sinopse = sinopse;
-        this.poster = poster;
+        if (poster) {
+            this.poster = poster;
+        }
         this.lancamento = new Date(lancamento);
         if (genre_ids) {
             for (let i = 0; i < genre_ids.length; i++) {
@@ -79,6 +85,12 @@ class Filme {
             }
         }
     }
+    getPosterLink() {
+        if (this.poster) {
+            return "https://image.tmdb.org/t/p/w200" + this.poster;
+        }
+        return "img/not-found.jpg";
+    }
     static getGeneroById(id) {
         for (let i = 0; i < Filme.generos.length; i++) {
             if (Filme.generos[i].id == id) {
@@ -88,23 +100,6 @@ class Filme {
         return null;
     }
 }
-const loginButton = document.getElementById('login-button');
-const searchButton = document.getElementById('search-button');
-const searchContainer = document.getElementById('search-container');
-const btnBuscar = document.getElementById("btnBuscar");
-const btnMinhasListas = document.getElementById("btnMinhasListas");
-const btnNovaPlaylist = document.getElementById("btnNovaPlaylist");
-const btnLimparPlaylist = document.getElementById("btnLimparPlaylist");
-const btnExcluirPlaylist = document.getElementById("btnExcluirPlaylist");
-const bodySearchContainer = document.getElementById("bodySearchContainer");
-const bodyMyListsContainer = document.getElementById("bodyMyListsContainer");
-let loginTimeOut;
-loginButton.addEventListener('click', (e) => __awaiter(void 0, void 0, void 0, function* () {
-    e.preventDefault();
-    const username = document.getElementById('login').value;
-    const password = document.getElementById('senha').value;
-    login(username, password);
-}));
 class HttpClient {
     static get(obj) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -138,31 +133,23 @@ class HttpClient {
         });
     }
 }
-function login(username, password) {
-    return __awaiter(this, void 0, void 0, function* () {
-        setLoading(true);
-        yield criarRequestToken();
-        const result = yield logar(username, password);
-        if (result && result.success) {
-            yield criarSessao();
-            yield carregaGeneros();
-            setLoading(false);
-            document.getElementById("loginContainer").classList.add("esconder");
-            document.getElementById("mainContainer").classList.remove("esconder");
-            return;
-        }
-        setLoading(false);
-        if (loginTimeOut) {
-            clearTimeout(loginTimeOut);
-        }
-        const erroSpan = document.getElementById("erroMsg");
-        erroSpan.innerText = "Usuário ou senha inválidos!";
-        loginTimeOut = setTimeout(() => {
-            erroSpan.innerText = '';
-            clearTimeout();
-        }, 5000);
-    });
-}
+//EVENTS
+const loginButton = document.getElementById('login-button');
+const searchButton = document.getElementById('search-button');
+const searchContainer = document.getElementById('search-container');
+const btnBuscar = document.getElementById("btnBuscar");
+const btnMinhasListas = document.getElementById("btnMinhasListas");
+const btnNovaPlaylist = document.getElementById("btnNovaPlaylist");
+const btnLimparPlaylist = document.getElementById("btnLimparPlaylist");
+const btnExcluirPlaylist = document.getElementById("btnExcluirPlaylist");
+const bodySearchContainer = document.getElementById("bodySearchContainer");
+const bodyMyListsContainer = document.getElementById("bodyMyListsContainer");
+loginButton.addEventListener('click', (e) => __awaiter(void 0, void 0, void 0, function* () {
+    e.preventDefault();
+    const username = document.getElementById('login').value;
+    const password = document.getElementById('senha').value;
+    login(username, password);
+}));
 btnBuscar.addEventListener("click", () => {
     if (!btnBuscar.classList.contains("selectedHeader")) {
         btnMinhasListas.classList.remove("selectedHeader");
@@ -218,19 +205,47 @@ searchButton.addEventListener('click', (event) => __awaiter(void 0, void 0, void
     else {
         innerHtml += `<span>Nenhum resultado referente à "${inputSearch.value}" foi encontrado!</span>`;
     }
+    innerHtml += `<div>`;
     lastSearch.map((filme, index) => {
         innerHtml += `
         <div class="resultListItem" onclick='openLastSearchMovie(${index})'>
-            ${filme.poster ? (`<img src="https://image.tmdb.org/t/p/w200${filme.poster}" alt="shrek poster"/>`) :
-            `<div></div>`}
+        <img src="${filme.getPosterLink()}" alt="poster_${filme.title}"/>
             <span>${filme.title}</span>
         </div>
         `;
     });
     inputSearch.value = "";
-    resultList.innerHTML = innerHtml;
+    resultList.innerHTML = innerHtml + `</div>`;
 }));
-login("diisk", "123456");
+//LOADING
+carregaGeneros();
+//FUNCTIONS
+function login(username, password) {
+    return __awaiter(this, void 0, void 0, function* () {
+        setLoading(true);
+        yield criarRequestToken();
+        const result = yield logar(username, password);
+        if (result && result.success) {
+            yield criarSessao();
+            yield carregaGeneros();
+            setLoading(false);
+            document.getElementById("loginContainer").classList.add("esconder");
+            document.getElementById("containerHeader").classList.add("esconderCel");
+            document.getElementById("mainContainer").classList.remove("esconder");
+            return;
+        }
+        setLoading(false);
+        if (loginTimeOut) {
+            clearTimeout(loginTimeOut);
+        }
+        const erroSpan = document.getElementById("erroMsg");
+        erroSpan.innerText = "Usuário ou senha inválidos!";
+        loginTimeOut = setTimeout(() => {
+            erroSpan.innerText = '';
+            clearTimeout();
+        }, 5000);
+    });
+}
 function setLoading(loading) {
     if (loadingTimeout) {
         clearTimeout(loadingTimeout);
@@ -267,7 +282,7 @@ function atualizaMinhasListas() {
             const filme = pl.filmes[j];
             movies += `
             <div class="playlistItemMovie" onclick='showMoviePopup(${j},${i})'>
-                <img src="https://image.tmdb.org/t/p/w200${filme.poster}" alt="poster_${filme.title}"/>
+                <img src="${filme.getPosterLink()}" alt="poster_${filme.title}"/>
                 <span>${filme.title}</span>
             </div>
             `;
@@ -278,7 +293,9 @@ function atualizaMinhasListas() {
                 <span>(${pl.filmes.length}) ${pl.name}</span>
                 <i class="fas fa-${selected ? "minus" : "plus"}"></i>
             </div>
+            <div>
             ${movies}
+            </div>
         </div>
         `;
     }
@@ -294,8 +311,9 @@ function criaPlaylistBtnCancelar() {
             break;
     }
 }
-function criaPlaylistBtnCriar() {
+function criaPlaylistBtnCriar(event) {
     return __awaiter(this, void 0, void 0, function* () {
+        event.preventDefault();
         const input = document.getElementById("inputPlaylistName");
         if (input.value.length == 0) {
             setCriarPlaylistError("Nome inválido!");
@@ -384,17 +402,15 @@ function showCriarPlaylistPopup() {
             <input type="text" id="inputPlaylistName" autocomplete="off" placeholder="Nome da Playlist"/>
             <span id="inputPlaylistNameError"></span>
             <div>
-                <input type="submit" class="createPlaylistBtn" value="Criar" onclick='criaPlaylistBtnCriar()'/>
+                <input type="submit" class="createPlaylistBtn" value="Criar" onclick='criaPlaylistBtnCriar(event)'/>
                 <input type="button" class="createPlaylistBtn" value="Cancelar" onclick='criaPlaylistBtnCancelar()'/>
             </div>
     `;
     setPopupScreen(true);
     setBlockScreen(true);
 }
-let playlistErrorTimeout;
 function setCriarPlaylistError(msg) {
     document.getElementById("inputPlaylistNameError").innerText = msg;
-    console.log(document.getElementById("inputPlaylistNameError"));
     if (playlistErrorTimeout) {
         clearTimeout(playlistErrorTimeout);
     }
@@ -540,7 +556,8 @@ function showMoviePopup(index, playlistIndex = -1) {
     popupContent.innerHTML = `
     <button type="button" onclick='closePopup();'><i class="fas fa-times"></i></button>
     <div class="movieInfos">
-                <img src="https://image.tmdb.org/t/p/w200${filme.poster}" alt="poster_${filme.title}"/>
+                <img src="${filme.getPosterLink()}" alt="poster_${filme.title}"/>
+                <div>
                 <div>
                     <span>Nome:</span> ${filme.title}
                 </div>
@@ -552,7 +569,8 @@ function showMoviePopup(index, playlistIndex = -1) {
                 </div>
                 <div>
                     <span>Sinopse:</span> ${filme.sinopse}
-                </div>
+                    </div>
+                    </div>
             </div>
             <div class="defaultButtonsDiv">
                 ${button}
@@ -601,7 +619,7 @@ function validateLoginButton() {
         loginButton.disabled = true;
     }
 }
-carregaGeneros();
+//GET/POST FUNCTIONS
 function procurarFilme(query) {
     return __awaiter(this, void 0, void 0, function* () {
         query = encodeURI(query);
